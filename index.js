@@ -40,6 +40,26 @@ async function run() {
       const result = await serviceCollection.insertOne(service);
       res.send(result);
     });
+
+    // reviews
+
+    app.get("/reviews", async (req, res) => {
+      let query = {};
+      if (req.query.service_id) {
+        query = {
+          service_id: req.query.service_id,
+        };
+      }
+      const cursor = reviewCollection.find(query);
+      const reviews = await cursor.toArray();
+      res.send(reviews);
+    });
+
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
   } finally {
   }
 }
