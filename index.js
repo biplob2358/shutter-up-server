@@ -23,8 +23,13 @@ async function run() {
     const reviewCollection = client.db("shutterUp").collection("reviews");
 
     app.get("/services", async (req, res) => {
+      const size = parseInt(req.query.size);
+
       const query = {};
-      const cursor = serviceCollection.find(query);
+      const cursor = serviceCollection
+        .find(query)
+        .limit(size)
+        .sort({ _id: -1 });
       const services = await cursor.toArray();
       res.send(services);
     });
@@ -44,13 +49,20 @@ async function run() {
     // reviews
 
     app.get("/reviews", async (req, res) => {
+      console.log(req.query.userEmaill);
       let query = {};
       if (req.query.service_id) {
         query = {
           service_id: req.query.service_id,
         };
       }
-      const cursor = reviewCollection.find(query);
+      if (req.query.email) {
+        query = {
+          email: req.query.email,
+        };
+      }
+
+      const cursor = reviewCollection.find(query).sort({ date: -1 });
       const reviews = await cursor.toArray();
       res.send(reviews);
     });
@@ -58,6 +70,39 @@ async function run() {
     app.post("/reviews", async (req, res) => {
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
+    app.delete("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reviewCollection.deleteOne(query);
+      res.send(result);
+    });
+    app.get("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reviewCollection.findOne(query);
+      res.send(result);
+    });
+
+    //update
+    app.put("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const reviews = req.body;
+      const option = { upsert: true };
+      const updatedReview = {
+        $set: {
+          review: reviews.review,
+          rating: reviews.rating,
+        },
+      };
+      const result = await reviewCollection.updateOne(
+        filter,
+        updatedReview,
+        option
+      );
       res.send(result);
     });
   } finally {
