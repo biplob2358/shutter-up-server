@@ -20,6 +20,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const serviceCollection = client.db("shutterUp").collection("services");
+    const reviewCollection = client.db("shutterUp").collection("reviews");
 
     app.get("/services", async (req, res) => {
       const query = {};
