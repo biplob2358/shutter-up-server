@@ -74,7 +74,7 @@ async function run() {
 
     app.get("/reviews", veryfyJWT, async (req, res) => {
       const decoded = req.decoded;
-      console.log(decoded);
+
       if (decoded.email !== req.query.email) {
         res.status(403).send({ message: "Unauthorized access" });
       }
