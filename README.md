@@ -1,7 +1,7 @@
 # Shutter Up Server
 
 ## This Backend api was completed by [Biplob Ghosh](https://www.linkedin.com/in/biplob971/).
-## [Server Live Api](https://shutter-up-server-mu.vercel.app/services)
+## [Live Server Api](https://shutter-up-server-mu.vercel.app/services)
 ## [Demo Live Site Link](https://shutter-up-cadac.web.app/)
 
 
